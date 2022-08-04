@@ -1,5 +1,5 @@
 """
-Name : 数据库建表.py
+Name : createDb.py
 Author  : 王泓林
 Contect : wanghonglin@cstc.org.cn
 Time    : 2022/3/14  13:03
@@ -12,11 +12,11 @@ import sqlite3_connect
 from PyQt5.QtWidgets import QApplication, QMainWindow
 from functools import partial  #获取qt输入需要的组件
 import input_test1 #连接输入界面py文件
-#import 数据库建表
+#import createDb
 
 
 cursor,db = sqlite3_connect.connect();  #建立与数据库的连接
-
+#createDb.database_create()
 '''读取输入界面输入信息'''
 def get_input1(ui):
     global line1_input, line2_input, line3_input, line4_input, line5_input, line6_input;  #声明为全局变量，方便调用
@@ -35,83 +35,69 @@ def search_func1(table_name,xuhao_num):
     #需要改进的地方，能不能直接在语句内直接调用table_name变量，而不是if，else语句判断
     global line1_input, line2_input, line3_input, line4_input, line5_input, line6_input;  # 声明为全局变量，方便调用
     if (table_name == 'storage2'):    #查询storage2库
-        sqli_func1 = "select * from storage2 where 序号 = %s;"
+        sqli_func1 = "select * from storage2 where 序号 = ?;"
         try:
-            cursor.execute(sqli_func1, xuhao_num);
+            cursor.execute(sqli_func1, [xuhao_num]);
             result_func1 = cursor.fetchone()
             print(result_func1)
+            #print(result_func1)
         except Exception as e:
             print("按序号查询表storage2失败:", e)
         else:
             print("按查询storage2成功")
             return result_func1
     if (table_name == 'input1'):    #查询input1库
-        sqli_func1 = "select * from input1 where 序号 = %s;"
+        sqli_func1 = "select * from input1 where 序号 = ?;"
         try:
-            cursor.execute(sqli_func1, xuhao_num);
+            cursor.execute(sqli_func1, [xuhao_num]);
             result_func1 = cursor.fetchone()
-            print(result_func1)
+            #print(result_func1)
         except Exception as e:
             print("按序号查询表input1失败:", e)
         else:
             print("按查询表input1成功")
             return result_func1
-    if (table_name == 'storage1'):    #查询storage1库
-        sqli_func1 = "select * from storage1 where 序号 = %s;"
-        try:
-            cursor.execute(sqli_func1, xuhao_num);
-            result_func1 = cursor.fetchone()
-            print(result_func1)
-        except Exception as e:
-            print("按序号查询storage1失败:", e)
-        else:
-            print("按查询storage1成功")
-            return result_func1
-    if (table_name == 'storage3'):    #查询storage3库
-        sqli_func1 = "select * from storage3 where 序号 = %s;"
-        try:
-            cursor.execute(sqli_func1, xuhao_num);
-            result_func1 = cursor.fetchone()
-            print(result_func1)
-        except Exception as e:
-            print("按序号查询storage3失败:", e)
-        else:
-            print("按查询storage3成功")
-            return result_func1
+
 
 '''表storage2记录更新,按文档编号唯一找到'''
 def update_storage2(wendang_num,jilu1,jilu2,jilu3,jilu4):
-    sqli = 'select * from storage2 where 文档编号 = %s'
-    cursor.execute(sqli,wendang_num)
+    sqli = 'select * from storage2 where 文档编号 = ?'
+    cursor.execute(sqli,[wendang_num])
     result_temp1 = cursor.fetchone()
     print(result_temp1)
     print(wendang_num)
     if (result_temp1 != None):
         '''找到第一组空的记录位置'''
-        cursor.execute('select 目的2,目的3,目的4,目的5,目的6,目的7,目的8 from storage2 where 文档编号 = %s',wendang_num)
+        cursor.execute('select 目的2,目的3,目的4,目的5,目的6,目的7,目的8 from storage2 where 文档编号 = ?',[wendang_num])
+        print("--flag--72")
         result_temp1 = cursor.fetchone()
+        print(result_temp1)
         if(result_temp1[0] == None):
-            cursor.execute('update storage2 set 操作日期2=%s,操作人2=%s,操作方式2=%s,目的2=%s where 文档编号 '
-                           '= %s',[jilu1,jilu2,jilu3,jilu4,wendang_num])
-        elif(result_temp1[0] == None):
-            cursor.execute('update storage2 set 操作日期3=%s,操作人3=%s,操作方式3=%s,目的3=%s where 文档编号 '
-                           '= %s',[jilu1,jilu2,jilu3,jilu4,wendang_num])
-        elif (result_temp1[0] == None):
-                cursor.execute('update storage2 set 操作日期4=%s,操作人4=%s,操作方式4=%s,目的4=%s where 文档编号 '
-                               '= %s', [jilu1, jilu2, jilu3, jilu4, wendang_num])
-        elif (result_temp1[0] == None):
-                cursor.execute('update storage2 set 操作日期5=%s,操作人5=%s,操作方式5=%s,目的5=%s where 文档编号 '
-                               '= %s', [jilu1, jilu2, jilu3, jilu4,wendang_num])
-        elif(result_temp1[0] == None):
-            cursor.execute('update storage2 set 操作日期6=%s,操作人6=%s,操作方式6=%s,目的6=%s where 文档编号 '
-                           '= %s',[jilu1,jilu2,jilu3,jilu4,wendang_num])
-        elif (result_temp1[0] == None):
-                cursor.execute('update storage2 set 操作日期7=%s,操作人7=%s,操作方式7=%s,目的7=%s where 文档编号 '
-                               '= %s', [jilu1, jilu2, jilu3, jilu4, wendang_num])
-        elif (result_temp1[0] == None):
-                cursor.execute('update storage2 set 操作日期8=%s,操作人8=%s,操作方式8=%s,目的8=%s where 文档编号 '
-                               '= %s', [jilu1, jilu2, jilu3, jilu4,wendang_num])
+            cursor.execute('update storage2 set 操作日期2=?,操作人2=?,操作方式2=?,目的2=? where 文档编号 '
+                           '= ?',[jilu1,jilu2,jilu3,jilu4,wendang_num])
+        elif(result_temp1[1] == None):
+            cursor.execute('update storage2 set 操作日期3=?,操作人3=?,操作方式3=?,目的3=? where 文档编号 '
+                           '= ?',[jilu1,jilu2,jilu3,jilu4,wendang_num])
+        elif (result_temp1[2] == None):
+                cursor.execute('update storage2 set 操作日期4=?,操作人4=?,操作方式4=?,目的4=? where 文档编号 '
+                               '= ?', [jilu1, jilu2, jilu3, jilu4, wendang_num])
+        elif (result_temp1[3] == None):
+                cursor.execute('update storage2 set 操作日期5=?,操作人5=?,操作方式5=?,目的5=? where 文档编号 '
+                               '= ?', [jilu1, jilu2, jilu3, jilu4,wendang_num])
+        elif(result_temp1[4] == None):
+            cursor.execute('update storage2 set 操作日期6=?,操作人6=?,操作方式6=?,目的6=? where 文档编号 '
+                           '= ?',[jilu1,jilu2,jilu3,jilu4,wendang_num])
+        elif (result_temp1[5] == None):
+                cursor.execute('update storage2 set 操作日期7=?,操作人7=?,操作方式7=?,目的7=? where 文档编号 '
+                               '= ?', [jilu1, jilu2, jilu3, jilu4, wendang_num])
+        elif (result_temp1[6] == None):
+                cursor.execute('update storage2 set 操作日期8=?,操作人8=?,操作方式8=?,目的8=? where 文档编号 '
+                               '= ?', [jilu1, jilu2, jilu3, jilu4,wendang_num])
     db.commit()
+    '''获取更新后 表storage2 文档对应记录的数据'''
+    cursor.execute('select * from storage2 where 文档编号 = ?', [wendang_num])
+    result_temp1 = cursor.fetchone()
+    return result_temp1
     #增加错误提示
 
 '''按照文档编号导出输出文件'''
@@ -133,17 +119,25 @@ def output_wendang():
 def storage_to_input1():  #函数:将输入界面的输入存入到表格input1中
     global line1_input, line2_input, line3_input, line4_input, line5_input, line6_input;  # 声明为全局变量，方便调用
     '''首先查询表格内存在的序号，方便给序号（主键）赋值'''
-    sqli = "select * from input1;"
+    #sqli = "select * from input1;"
     num_input1 = 0 ;
-    num_input1 = cursor.execute(sqli)  # 默认不返回查询结果集， 返回数据记录数。
+    #cursor.execute(sqli)  # 默认不返回查询结果集， 返回数据记录数。
+    #num_input1 = cursor.fetchall()
+
+    drills = cursor.execute("SELECT count(*) FROM {};".format("input1"))
+    count=drills.fetchone()
+    num_input1 = count[0]
+
+    print(num_input1)
     '''向数据库内赋值，包括读取的行与自动赋值的序号'''
     num_input1 = num_input1 + 1;   #序号是主键，不可重复，不可改动
+    print(num_input1)
     try:
-        insert_sqli = "insert into input1 values (%s,%s,%s,%s,%s,%s,%s)"
+        insert_sqli = "insert into input1 values (?,?,?,?,?,?,?)"
         cursor.execute(insert_sqli,[num_input1, line1_input, line2_input, line3_input, line4_input, line5_input, line6_input])
     except Exception as e:
-        #print("插入数据失败:", e)
-        ui.textBrowser.append("输入数据失败:");    #需要改进，怎么把错误e给放进去
+        print("函数'storage_to_input1' to 插入数据失败:", e)
+        ui.textBrowser.append("输入数据失败:{}".format(e));    #需要改进，怎么把错误e给放进去
     else:
         # 如果是插入数据， 一定要提交数据， 不然数据库中找不到要插入的数据;
         db.commit()
@@ -153,15 +147,18 @@ def storage_to_input1():  #函数:将输入界面的输入存入到表格input1�
 
 '''从input1数据库中将本次输入调出打印在输入确认界面，方便确认输入是否错误'''
 def input_confirm():
-    sqli2 = "select * from input1;"
-    num_input1 = 0;
-    num_input1 = cursor.execute(sqli2)  # 默认不返回查询结果集， 返回数据记录数。
+    drills = cursor.execute("SELECT count(*) FROM {};".format("input1"))
+    count=drills.fetchone()
+    num_input1 = int(count[0]) #定位到 表input1 中的数据记录数
+    #print(num_input1)
     try:
-        search_sqli = "select * from input1 where 序号 = %s"
-        cursor.execute(search_sqli, num_input1);
+        search_sqli = "select * from input1 where 序号 = ?"
+        result = cursor.execute(search_sqli,[num_input1])
         result = cursor.fetchone();
+        print(result)
+
     except Exception as e:
-        print("插入数据失败:", e)
+        print("函数'input_confirm'插入数据失败:", e)
         #ui.textBrowser.setText("数据失败:");    #需要改进，怎么把错误e给放进去
     else:
         # 如果是插入数据， 一定要提交数据， 不然数据库中找不到要插入的数据;
@@ -183,47 +180,49 @@ def input_confirm():
 def input_to_storage2():
     #这个应该由查询，插入以及更新功能模组组成，先获得input1中新输入的数据记录，判断是否已经有文档记录，没有的话新增记录，有的话则更新新的记录
     '''下面抓取本次输入的文档编号'''
-    sqli3 = "select * from input1;"
-    search_sqli_1 = "select 文档编号 from input1 where 序号 = %s"
-    num_input1 = 0;  #统计input1中的记录行数
-    num_input1 = cursor.execute(sqli3)  # 默认不返回查询结果集， 返回数据记录数。
-    cursor.execute(search_sqli_1, num_input1);
-    result_1 = str(cursor.fetchone()[0])
-    #print(result_1)
+    drills = cursor.execute("SELECT count(*) FROM {};".format("input1"))
+    count=drills.fetchone()
+    num_input1 = int(count[0]) #定位到 表input1 中数据记录数
+    search_sqli_1 = "select 文档编号 from input1 where 序号 = ?"
+    cursor.execute(search_sqli_1, [num_input1])
+    result_1 = str(cursor.fetchone()[0]) #获取input1最后一条数据记录中的文档编号
+
     '''判断storage2是否已经有这个文档编号的记录'''
     global line1_input, line2_input, line3_input, line4_input, line5_input, line6_input;  # 声明为全局变量，方便调用
-    search_sqli_2 = "select * from storage2 where 文档编号 = %s"
-    cursor.execute(search_sqli_2,line2_input)
+    search_sqli_2 = "select * from storage2 where 文档编号 = ?"
+    cursor.execute(search_sqli_2,[line2_input])
     result_2 = str(cursor.fetchone())
     #print(result_2)
     if(result_2 != 'None'):    #已有记录
         ui.textBrowser.append("该文档已有记录如下:"+result_2);
-        update_storage2(result_1,line3_input,line4_input,line5_input,line6_input)
+        result_3 = update_storage2(result_1,line3_input,line4_input,line5_input,line6_input)
         #本处添加更新功能的内容
-        ui.textBrowser.append("本次输入后该文档记录更新为:")
+        ui.textBrowser.append("本次输入后该文档记录更新为:{}".format(result_3))
     else:    #无记录
-        sqli4 = "select * from storage2;"
-        num_input2 = 0;
-        num_input2 = cursor.execute(sqli4)  # 默认不返回查询结果集， 返回数据记录数。
+        drills = cursor.execute("SELECT count(*) FROM {};".format("storage2"))
+        count = drills.fetchone()
+        num_input2 = int(count[0])  # 定位到 表storage 中数据记录数
         '''向数据库内赋值，包括读取的行与自动赋值的序号'''
         num_input2 = num_input2 + 1;  # 以上几行是为了确定序号，序号是主键，不可重复，不可改动
         try:
-            insert_sqli2 = "insert into storage2 (序号,文档编号,项目编号,操作日期1,操作人1,操作方式1,目的1) values(%s,%s,%s,%s,%s,%s,%s)"
+            insert_sqli2 = "insert into storage2 (序号,文档编号,项目编号,操作日期1,操作人1,操作方式1,目的1) values(?,?,?,?,?,?,?)"
             cursor.execute(insert_sqli2,[num_input2, line2_input, line1_input, line3_input, line4_input, line5_input, line6_input])
         except Exception as e:
             print("存储到表storage2失败:", e)
             #ui.textBrowser.append("输入数据失败:");  # 需要改进，怎么把错误e给放进去
+
         else:
             # 如果是插入数据， 一定要提交数据， 不然数据库中找不到要插入的数据;
             db.commit()
-            # print("插入数据成功;")
+            print("插入数据成功;")
             result_3 = search_func1('storage2',num_input2)
             '''单行数据去除空，看看能不能转为函数，最终目标是把能放到类里面，然后引用就行'''
+            print("--flag--213")
             result_3_output = [];
             for x in result_3:
                 if(x != None):result_3_output.append(x);
             result_3_output = str(result_3_output);
-            #print(str(result_3_output))
+            print(str(result_3_output))
             ui.textBrowser.append("存储到表storage2成功，这是该台账的第一次记录,存储如下:"+result_3_output);  # 文本框内确认输入成功
 
 
